@@ -21,8 +21,15 @@ namespace VPShelter
         protected bool hasToPotty;
         public string name;
         protected string description;
+        public bool isHere;
 
         //properties
+        public bool IsHere
+        {
+            get { return this.isHere; }
+            set { this.isHere = value; }
+        }
+
         public bool IsHungry
         {
             get { return this.isHungry; }
@@ -91,13 +98,14 @@ namespace VPShelter
 
         public VirtualPet()
         {
-
+            this.isHere = true;
         }
 
         public VirtualPet(string name, string description)
         {
             this.name = name;
             this.description = description;
+            this.isHere = true;
         }
 
         public VirtualPet(string name, string description, int hungerLevel, int thirstLevel, int tiredness, int bordomLevel)
@@ -108,6 +116,7 @@ namespace VPShelter
             this.thirstLevel = thirstLevel;
             this.tiredness = tiredness;
             this.bordomLevel = bordomLevel;
+            this.isHere = true;
         }
 
 
@@ -254,80 +263,88 @@ namespace VPShelter
 
         //tick method
         public virtual void Tick()
-        {
-            //created random class to allow fluctuation in fields
-            Random r = new Random();
-
-            hungerLevel = hungerLevel + r.Next(-10, 10);
-            thirstLevel = thirstLevel + r.Next(-3, 3);
-            tiredness = tiredness + r.Next(-5, 5);
-            bordomLevel = bordomLevel = r.Next(-6, 6);
-
-            //These extensive if statements make sure that the levels (since they are randomly fluctuating) stay within the range of 0 - 100
-            if ((hungerLevel >= 50) && (hungerLevel <= 100))
+        { 
+            //the pet only ticks if it is here
+            if (isHere)
             {
-                isHungry = true;
-            }
-            else if ((hungerLevel < 50) && (hungerLevel >= 0))
-            {
-                isHungry = false;
-                hasToPotty = true;
+                //created random class to allow fluctuation in fields
+                Random r = new Random();
+
+                hungerLevel = hungerLevel + r.Next(-10, 10);
+                thirstLevel = thirstLevel + r.Next(-3, 3);
+                tiredness = tiredness + r.Next(-5, 5);
+                bordomLevel = bordomLevel = r.Next(-6, 6);
+
+                //These extensive if statements make sure that the levels (since they are randomly fluctuating) stay within the range of 0 - 100
+                if ((hungerLevel >= 50) && (hungerLevel <= 100))
+                {
+                    isHungry = true;
+                }
+                else if ((hungerLevel < 50) && (hungerLevel >= 0))
+                {
+                    isHungry = false;
+                    hasToPotty = true;
+                }
+                else
+                {
+                    hungerLevel = 50;
+                    isHungry = true;
+                }
+
+                if ((thirstLevel >= 50) && (thirstLevel <= 100))
+                {
+                    isThirsty = true;
+                }
+                else if ((thirstLevel < 50) && (thirstLevel >= 0))
+                {
+                    isThirsty = false;
+                    hasToPotty = true;
+                }
+                else
+                {
+                    thirstLevel = 49;
+                    isThirsty = false;
+                }
+
+                if ((bordomLevel >= 50) && (bordomLevel <= 100))
+                {
+                    isBored = true;
+                }
+                else if ((bordomLevel < 50) && (bordomLevel >= 100))
+                {
+                    isBored = false;
+                }
+                else
+                {
+                    bordomLevel = 40;
+                    isBored = false;
+                }
+
+                if ((tiredness >= 50) && (tiredness <= 100))
+                {
+                    isTired = true;
+                }
+                else if ((tiredness < 50) && (tiredness >= 0))
+                {
+                    isTired = false;
+                }
+                else
+                {
+                    tiredness = 30;
+                    IsTired = false;
+                }
+
+                //finally, after all the numbers are set, this is sent to the console.
+                Console.WriteLine("\nIt is " + isHungry + " that " + name + " is hungry. \nHunger Level: " + hungerLevel);
+                Console.WriteLine("\nIt is " + IsThirsty + " that " + name + " is thirsty. \nThirst Level: " + thirstLevel);
+                Console.WriteLine("\nIt is " + isTired + " that " + name + " is tired. \nTiredness: " + tiredness);
+                Console.WriteLine("\nIt is " + isBored + " that " + name + " is bored. \nBordom Level: " + bordomLevel);
+                Console.WriteLine("\nIt is " + hasToPotty + " that " + name + " has to go potty. \n");
             }
             else
             {
-                hungerLevel = 50;
-                isHungry = true;
+                return;
             }
-
-            if ((thirstLevel >= 50) && (thirstLevel <= 100))
-            {
-                isThirsty = true;
-            }
-            else if ((thirstLevel < 50) && (thirstLevel >= 0))
-            {
-                isThirsty = false;
-                hasToPotty = true;
-            }
-            else
-            {
-                thirstLevel = 49;
-                isThirsty = false;
-            }
-
-            if ((bordomLevel >= 50) && (bordomLevel <= 100))
-            {
-                isBored = true;
-            }
-            else if ((bordomLevel < 50) && (bordomLevel >= 100))
-            {
-                isBored = false;
-            }
-            else
-            {
-                bordomLevel = 40;
-                isBored = false;
-            }
-
-            if ((tiredness >= 50) && (tiredness <= 100))
-            {
-                isTired = true;
-            }
-            else if ((tiredness < 50) && (tiredness >= 0))
-            {
-                isTired = false;
-            }
-            else
-            {
-                tiredness = 30;
-                IsTired = false;
-            }
-
-            //finally, after all the numbers are set, this is sent to the console.
-            Console.WriteLine("\nIt is " + isHungry + " that " + name + "is hungry. \nHunger Level: " + hungerLevel);
-            Console.WriteLine("\nIt is " + IsThirsty + " that " + name + " is thirsty. \nThirst Level: " + thirstLevel);
-            Console.WriteLine("\nIt is " + isTired + " that " + name + " is tired. \nTiredness: " + tiredness);
-            Console.WriteLine("\nIt is " + isBored + " that " + name + " is bored. \nBordom Level: " + bordomLevel);
-            Console.WriteLine("\nIt is " + hasToPotty + " that " + name + " has to go potty. \n");
           
         }
     }
